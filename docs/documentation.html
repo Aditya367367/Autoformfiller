@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoFormFiller - Architecture, Security & Developer Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+      @bottom-right {
+        content: counter(page);
+        font-family: 'Inter', sans-serif;
+        font-size: 9pt;
+        color: #64748b;
+      }
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 10pt;
+      line-height: 1.6;
+      color: #1e293b;
+      background: #ffffff;
+    }
+
+    .cover {
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 85vh;
+      border-bottom: 2px solid #0d9488;
+      padding-bottom: 40px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 8pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 4px;
+      background: #f0fdfa;
+      color: #0d9488;
+      border: 1px solid #ccfbf1;
+      margin-bottom: 16px;
+    }
+
+    h1.title {
+      font-size: 28pt;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+
+    h1.title span {
+      color: #0d9488;
+    }
+
+    p.subtitle {
+      font-size: 12pt;
+      color: #475569;
+      margin-bottom: 32px;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    .meta-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      font-size: 9pt;
+    }
+
+    .meta-item strong {
+      color: #0f172a;
+      display: block;
+      margin-bottom: 2px;
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .meta-item span {
+      color: #475569;
+    }
+
+    h2 {
+      font-size: 16pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 28px;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #e2e8f0;
+      break-after: avoid;
+    }
+
+    h3 {
+      font-size: 12pt;
+      font-weight: 600;
+      color: #0d9488;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      break-after: avoid;
+    }
+
+    p {
+      margin-bottom: 10px;
+      color: #334155;
+    }
+
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 12px;
+      color: #334155;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+      font-size: 8.5pt;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 5px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+      font-size: 8.5pt;
+      line-height: 1.45;
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin: 12px 0 16px;
+      overflow-x: auto;
+      break-inside: avoid;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      border: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px;
+      font-size: 8.5pt;
+      break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafc;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    tr:nth-child(even) td {
+      background: #fdfdfd;
+    }
+
+    .callout {
+      background: #f8fafc;
+      border-left: 4px solid #0d9488;
+      padding: 12px 16px;
+      border-radius: 0 6px 6px 0;
+      margin: 14px 0;
+      font-size: 9pt;
+      break-inside: avoid;
+    }
+
+    .callout.security {
+      border-left-color: #ea580c;
+      background: #fff7ed;
+    }
+
+    .callout strong {
+      color: #0f172a;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    /* Author Profile Card */
+    .author-card {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 10px;
+      padding: 24px;
+      margin-top: 32px;
+      break-inside: avoid;
+      border: 1px solid #334155;
+    }
+
+    .author-card h3 {
+      color: #38bdf8;
+      font-size: 15pt;
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
+
+    .author-role {
+      font-size: 9.5pt;
+      color: #94a3b8;
+      margin-bottom: 14px;
+    }
+
+    .author-links {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+      padding-top: 14px;
+      border-top: 1px solid #334155;
+      font-size: 9pt;
+    }
+
+    .author-links a {
+      color: #2dd4bf;
+      text-decoration: none;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 8pt;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- COVER PAGE                                                               -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <div class="cover">
+    <div class="badge">Open Source Technical Specification & Manual</div>
+    <h1 class="title">Auto<span>Form</span>Filler</h1>
+    <p class="subtitle">
+      A High-Performance, Privacy-Focused Browser Extension and Local Python Daemon
+      for Intelligent Multi-Section Form Automation & Resume Extraction.
+    </p>
+
+    <div class="meta-box">
+      <div class="meta-item">
+        <strong>Software Version</strong>
+        <span>v1.1.0 (Production Hardened)</span>
+      </div>
+      <div class="meta-item">
+        <strong>Software License</strong>
+        <span>MIT Open Source License</span>
+      </div>
+      <div class="meta-item">
+        <strong>Target Environments</strong>
+        <span>Google Chrome, Brave, MS Edge (Chromium MV3)</span>
+      </div>
+      <div class="meta-item">
+        <strong>Lead Author & Architect</strong>
+        <span>Aditya Chauhan (Full-Stack Developer)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- 1. EXECUTIVE SUMMARY & PROBLEM STATEMENT                                 -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <h2>1. Executive Summary & Purpose</h2>
+  <p>
+    Job applications, university registrations, and enterprise vendor forms require users to repeatedly
+    re-type the exact same information across dozens of fragmented interfaces. While legacy browser autofills
+    support basic names and addresses, they consistently fail on complex career inputs such as current company,
+    work tenure dates, university degrees, graduation batches, high school records, language proficiency levels,
+    and structured technical skills.
+  </p>
+  <p>
+    <strong>AutoFormFiller</strong> solves this by pairing a lightweight, secure Chrome Manifest V3 extension
+    with a local, zero-cloud Python daemon backed by SQLite. It provides two non-destructive input workflows:
+  </p>
+  <ul>
+    <li><strong>Direct Resume Ingestion:</strong> Drag and drop any <code>.pdf</code>, <code>.docx</code>, or <code>.txt</code> resume. The system extracts career, education, and language details using pattern-matched section analyzers.</li>
+    <li><strong>Manual Profile Management:</strong> Full control to add, edit, override, or append custom field-value pairs into a private local SQLite database.</li>
+    <li><strong>One-Click Page Automation:</strong> When navigating any job portal or registration form, the user selects their profile and clicks <em>"Auto Fill This Form"</em> to populate inputs across the DOM instantly.</li>
+  </ul>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- 2. ARCHITECTURE OVERVIEW                                                 -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <h2>2. System Architecture</h2>
+  <p>
+    The system follows a decoupled, privacy-first local client-server pattern. Sensitive data never leaves
+    the user's physical machine.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>File Path</th>
+        <th>Core Responsibilities</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Service Worker</strong></td>
+        <td><code>extension/background.js</code></td>
+        <td>Routes messages between popup, content script, and the authenticated localhost API. Uses <code>activeTab</code> for on-demand injection.</td>
+      </tr>
+      <tr>
+        <td><strong>Content Script</strong></td>
+        <td><code>extension/content.js</code></td>
+        <td>Traverses target DOM, enforces strict anti-honeypot visibility checks, maps input tags, and dispatches native browser events.</td>
+      </tr>
+      <tr>
+        <td><strong>User Interface</strong></td>
+        <td><code>extension/popup.html, popup.js</code></td>
+        <td>3-tab modern UI (Fill, Profiles, Add). Safe DOM construction, active domain verification badge, and file upload handler.</td>
+      </tr>
+      <tr>
+        <td><strong>REST API Daemon</strong></td>
+        <td><code>backend/app.py</code></td>
+        <td>Flask HTTP server on <code>127.0.0.1:5000</code>. Enforces <code>X-AFF-KEY</code> token security, scoped CORS, and heuristic field matching.</td>
+      </tr>
+      <tr>
+        <td><strong>Resume Engine</strong></td>
+        <td><code>backend/resume_parser.py</code></td>
+        <td>Multi-section document parser extracting company, dates, university, degree, school, languages, and technical skills.</td>
+      </tr>
+      <tr>
+        <td><strong>Database Layer</strong></td>
+        <td><code>backend/db.py</code></td>
+        <td>SQLite database storing profile metadata and relational key-value attributes with cascade deletions.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- 3. HOW TO SET UP & RUN                                                   -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <h2>3. Step-by-Step User & Setup Guide</h2>
+
+  <h3>3.1. Setting Up the Local Python Backend (Virtual Environment)</h3>
+  <p>
+    AutoFormFiller isolates its dependencies within a standard Python virtual environment (<code>venv</code>).
+    Open your terminal and run:
+  </p>
+  <pre><code># 1. Navigate to the project root directory
+cd /home/ADIXPRI/Desktop/autoformfiller
+
+# 2. Initialize the Python virtual environment
+python3 -m venv venv
+
+# 3. Activate the environment
+source venv/bin/activate
+
+# 4. Install backend dependencies
+pip install -r backend/requirements.txt</code></pre>
+
+  <h3>3.2. Launching the Backend Daemon</h3>
+  <p>
+    With the virtual environment active, run the Flask server:
+  </p>
+  <pre><code>python backend/app.py</code></pre>
+  <p>
+    The server initializes on <code>http://127.0.0.1:5000</code>. It will automatically create the SQLite database
+    file <code>backend/autoformfiller.db</code> upon first launch. Verify it is running by checking
+    <code>http://127.0.0.1:5000/api/health</code>.
+  </p>
+
+  <h3>3.3. Installing the Extension in Google Chrome / Chromium</h3>
+  <ol>
+    <li>Launch Google Chrome, Brave, or Microsoft Edge.</li>
+    <li>Navigate to the extensions manager by typing <code>chrome://extensions/</code> in the URL bar.</li>
+    <li>Enable the <strong>Developer mode</strong> toggle located in the upper-right corner.</li>
+    <li>Click the <strong>Load unpacked</strong> button in the top toolbar.</li>
+    <li>Select the folder: <code>/home/ADIXPRI/Desktop/autoformfiller/extension</code>.</li>
+    <li>Pin the <strong>AutoFormFiller</strong> icon to your browser toolbar for quick one-click access.</li>
+  </ol>
+
+  <h3>3.4. End-to-End Usage Walkthrough</h3>
+  <ol>
+    <li><strong>Create or Ingest Profile:</strong> Click the extension icon and navigate to the <em>Add Profile</em> tab. Drop your resume PDF or type manual fields. Click <em>Save Profile</em>.</li>
+    <li><strong>Open Application Form:</strong> Open any web form, or test locally with the bundled test file:
+      <pre><code># In Chrome, press Ctrl + O and open:
+/home/ADIXPRI/Desktop/autoformfiller/demo_form.html</code></pre>
+    </li>
+    <li><strong>Auto Fill:</strong> Click the extension icon on the form page, select your saved profile, and click <strong>Auto Fill This Form</strong>. All matching visible fields will be populated with animated visual highlights.</li>
+  </ol>
+
+  <div class="page-break"></div>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- 4. SECURITY & THREAT MITIGATION                                          -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <h2>4. Security Architecture & Threat Mitigations</h2>
+  <p>
+    Browser extensions communicating with localhost servers present specific security challenges.
+    AutoFormFiller was hardened to defend against drive-by web attacks, CSRF, honeypot exfiltration, and DoS.
+  </p>
+
+  <div class="callout security">
+    <strong>Security Defense 1: Authenticated API Token & Scoped CORS (Anti-Drive-By CSRF)</strong>
+    <p>
+      <em>The Threat:</em> If a localhost API allows unauthenticated access or wildcard CORS (<code>*</code>), any malicious webpage
+      a user visits could execute <code>fetch("http://127.0.0.1:5000/api/profiles")</code> to steal stored resumes.
+      <br /><br />
+      <em>The Mitigation:</em> <code>backend/app.py</code> strictly scopes CORS to extension schemes (<code>chrome-extension://*</code>)
+      and localhost. Additionally, it enforces an authenticated pre-shared security token via the <code>X-AFF-KEY</code> header on all
+      endpoints. Any regular website attempting to make requests without the header or with custom headers triggers a browser CORS
+      preflight that is instantly blocked by the browser's Same-Origin Policy.
+    </p>
+  </div>
+
+  <div class="callout security">
+    <strong>Security Defense 2: Anti-Honeypot & Invisible Field Protection</strong>
+    <p>
+      <em>The Threat:</em> Deceptive job application sites can embed hidden input tags off-screen (e.g., <code>left: -9999px</code>,
+      <code>opacity: 0</code>, or <code>1px x 1px</code>) named <code>phone</code>, <code>address</code>, or <code>university</code>
+      to covertly siphon private profile attributes.
+      <br /><br />
+      <em>The Mitigation:</em> <code>extension/content.js</code> contains the <code>isSecurelyVisible()</code> validator.
+      It inspects layout bounding boxes (<code>rect.width &gt;= 10</code>, <code>rect.height &gt;= 10</code>), checks viewport
+      coordinates to ensure fields are not placed off-screen, inspects CSS clipping and opacity, and strictly ignores password
+      inputs, hidden inputs, and elements marked <code>aria-hidden="true"</code>.
+    </p>
+  </div>
+
+  <div class="callout security">
+    <strong>Security Defense 3: Principle of Least Privilege in Permissions</strong>
+    <p>
+      <em>The Threat:</em> Overprivileged extensions requesting <code>&lt;all_urls&gt;</code> host permissions have permanent background
+      access to read every tab the user browses.
+      <br /><br />
+      <em>The Mitigation:</em> In <code>extension/manifest.json</code>, <code>&lt;all_urls&gt;</code> was removed from host permissions.
+      Network requests are locked down strictly to <code>http://127.0.0.1:5000/*</code>. DOM access is scoped to the user-invoked tab
+      via the secure Chrome <code>activeTab</code> API.
+    </p>
+  </div>
+
+  <div class="callout security">
+    <strong>Security Defense 4: Upload Size Limits & Filename Sanitization</strong>
+    <p>
+      <em>The Threat:</em> Arbitrary file uploads can lead to memory exhaustion (DoS) or path traversal attacks.
+      <br /><br />
+      <em>The Mitigation:</em> Enforces <code>MAX_CONTENT_LENGTH = 10MB</code>, validates against a file extension whitelist
+      (<code>.pdf</code>, <code>.docx</code>, <code>.doc</code>, <code>.txt</code>), and sanitizes filenames using
+      <code>werkzeug.utils.secure_filename</code>.
+    </p>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- 5. DEVELOPER GUIDE: EXTENDING THE PLATFORM                              -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <h2>5. Developer Guide: How to Extend & Add New Features</h2>
+  <p>
+    AutoFormFiller was engineered with modular abstractions so software engineers can easily extend field mappings,
+    add custom resume extractors, or build adapters for proprietary form components.
+  </p>
+
+  <h3>5.1. Adding New Form Field Mappings</h3>
+  <p>
+    All heuristic field detection is defined in the <code>FIELD_MAPPING</code> dictionary inside
+    <code>backend/app.py</code>. To add support for a new form concept (e.g. <em>Expected Salary</em> or <em>Notice Period</em>):
+  </p>
+  <pre><code># In backend/app.py -> FIELD_MAPPING
+FIELD_MAPPING = {
+    # Existing fields...
+    "salary_expectation": [
+        "salary", "expected_salary", "ctc", "expected_ctc", 
+        "compensation", "remuneration", "target_pay"
+    ],
+    "notice_period": [
+        "notice_period", "notice", "availability", 
+        "joining_time", "start_immediately", "days_notice"
+    ],
+}</code></pre>
+  <p>
+    When a webpage form field has an <code>id</code>, <code>name</code>, <code>placeholder</code>, or <code>label</code>
+    containing any of these keywords, the backend will automatically map the stored profile value to it.
+  </p>
+
+  <h3>5.2. Adding New Parsing Rules to the Resume Engine</h3>
+  <p>
+    The resume parser lives in <code>backend/resume_parser.py</code>. To add extraction logic for a new field:
+  </p>
+  <pre><code># In backend/resume_parser.py -> _extract_fields_from_text()
+def _extract_fields_from_text(text: str) -> dict:
+    fields = {}
+    # ... existing extraction logic ...
+
+    # Example: Custom Notice Period Regex
+    notice_match = re.search(r"(\d+)\s*(?:days?|months?)\s*notice", text, re.IGNORECASE)
+    if notice_match:
+        fields["notice_period"] = notice_match.group(0).strip()
+
+    return fields</code></pre>
+
+  <h3>5.3. Supporting Custom Form Components (e.g., Shadow DOM, Custom UI Libraries)</h3>
+  <p>
+    If you encounter custom web components (such as Salesforce, Workday, or Greenhouse custom widgets),
+    extend the element scanner in <code>extension/content.js</code>:
+  </p>
+  <pre><code>// In extension/content.js -> collectFormFields()
+function collectFormFields() {
+  const selectors = [
+    'input:not([type="hidden"]):not([type="password"])',
+    'textarea',
+    'select',
+    // Add custom component tags:
+    'div[contenteditable="true"]',
+    'custom-select-input'
+  ].join(",");
+
+  // Extract descriptors and return to background script
+}</code></pre>
+
+  <div class="page-break"></div>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- 6. LICENSE & OPEN SOURCE TERMS                                           -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <h2>6. Open Source License (MIT License)</h2>
+  <p>
+    AutoFormFiller is licensed as open-source software under the permissive terms of the <strong>MIT License</strong>.
+  </p>
+
+  <pre><code>MIT License
+
+Copyright (c) 2026 Aditya Chauhan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</code></pre>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- 7. LEAD AUTHOR & DEVELOPER INFORMATION                                   -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <h2>7. Lead Author & Developer Profile</h2>
+
+  <div class="author-card">
+    <h3>Aditya Chauhan</h3>
+    <div class="author-role">
+      Full-Stack Developer | Python · Django · React.js · Next.js · Node.js
+    </div>
+    <p style="color: #cbd5e1; font-size: 9pt; line-height: 1.5;">
+      Software Engineer with specialized experience developing and shipping high-performance web applications,
+      automation microservices, and end-to-end full-stack architectures. Architect of the AutoFormFiller
+      platform, built to deliver secure, zero-cloud personal data automation for modern web workflows.
+    </p>
+
+    <div class="author-links">
+      <div>
+        <span style="color: #94a3b8; font-size: 8pt; display: block;">EMAIL ADDRESS</span>
+        <a href="mailto:suryachauhan367367@gmail.com">suryachauhan367367@gmail.com</a>
+      </div>
+      <div>
+        <span style="color: #94a3b8; font-size: 8pt; display: block;">CONTACT NUMBER</span>
+        <span style="color: #f8fafc;">+91 8369899103</span>
+      </div>
+      <div>
+        <span style="color: #94a3b8; font-size: 8pt; display: block;">LINKEDIN PROFILE</span>
+        <a href="https://linkedin.com/in/aditya-chauhan-1b1a95228" target="_blank">linkedin.com/in/aditya-chauhan-1b1a95228</a>
+      </div>
+      <div>
+        <span style="color: #94a3b8; font-size: 8pt; display: block;">GITHUB REPOSITORY & PROFILE</span>
+        <a href="https://github.com/Aditya367367" target="_blank">github.com/Aditya367367</a>
+      </div>
+      <div>
+        <span style="color: #94a3b8; font-size: 8pt; display: block;">LOCATION</span>
+        <span style="color: #f8fafc;">Mumbai, Maharashtra, India</span>
+      </div>
+      <div>
+        <span style="color: #94a3b8; font-size: 8pt; display: block;">CONTRIBUTIONS & PRs</span>
+        <span style="color: #f8fafc;">Open for Community Pull Requests</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    AutoFormFiller Documentation & Whitepaper &bull; Generated September 2026 &bull; Written by Aditya Chauhan
+  </div>
+
+</body>
+</html>

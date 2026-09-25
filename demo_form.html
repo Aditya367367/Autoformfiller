@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Application Demo Form - AutoFormFiller Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 720px;
+      padding: 32px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #38bdf8;
+    }
+    p.subtitle {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #0d9488;
+      margin: 20px 0 12px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 4px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-row {
+      display: flex;
+      gap: 16px;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 5px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 14px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #f8fafc;
+      font-family: inherit;
+      font-size: 13px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #0d9488;
+      box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.3);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+    .actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    button {
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-secondary {
+      background: #334155;
+      color: #cbd5e1;
+    }
+    .btn-primary {
+      background: #0d9488;
+      color: white;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: rgba(13, 148, 136, 0.2);
+      color: #2dd4bf;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="badge">Test Form</div>
+    <h1>Job Application Form</h1>
+    <p class="subtitle">Use this page to test the AutoFormFiller browser extension.</p>
+
+    <form id="application-form" onsubmit="event.preventDefault(); alert('Form submitted successfully!');">
+      
+      <!-- ── 1. Personal & Contact Details ─────────────────────────────────── -->
+      <div class="section-title">1. Personal & Contact Information</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first_name">First Name</label>
+          <input type="text" id="first_name" name="first_name" placeholder="Aditya" />
+        </div>
+        <div class="form-group">
+          <label for="last_name">Last Name</label>
+          <input type="text" id="last_name" name="last_name" placeholder="Chauhan" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="full_name">Full Name</label>
+        <input type="text" id="full_name" name="full_name" placeholder="Aditya Chauhan" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="example@email.com" />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="+91 8369899103" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address / City & Country</label>
+        <input type="text" id="address" name="address" placeholder="Mumbai, India" />
+      </div>
+
+      <!-- ── 2. Employment & Experience ────────────────────────────────────── -->
+      <div class="section-title">2. Work Experience & Current Company</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="company">Current / Latest Company</label>
+          <input type="text" id="company" name="company" placeholder="Cinefil India..." />
+        </div>
+        <div class="form-group">
+          <label for="job_title">Job Title / Role</label>
+          <input type="text" id="job_title" name="job_title" placeholder="Software Engineer" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dates">Employment Dates / Tenure</label>
+          <input type="text" id="dates" name="dates" placeholder="Jan 2026 – Present" />
+        </div>
+        <div class="form-group">
+          <label for="start_date">Start Date</label>
+          <input type="text" id="start_date" name="start_date" placeholder="Jan 2026" />
+        </div>
+      </div>
+
+      <!-- ── 3. Education & Schooling ──────────────────────────────────────── -->
+      <div class="section-title">3. Education, University & School</div>
+      <div class="form-group">
+        <label for="university">University / College</label>
+        <input type="text" id="university" name="university" placeholder="Yashwantrao Chavan Maharashtra Open University" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="degree">Degree / Qualification</label>
+          <input type="text" id="degree" name="degree" placeholder="Bachelor of Computer Applications (BCA)" />
+        </div>
+        <div class="form-group">
+          <label for="graduation_year">Graduation Year</label>
+          <input type="text" id="graduation_year" name="graduation_year" placeholder="2024" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="school">School / Junior College</label>
+          <input type="text" id="school" name="school" placeholder="TP Bhatia College, Kandivali" />
+        </div>
+        <div class="form-group">
+          <label for="school_year">School Passing Year</label>
+          <input type="text" id="school_year" name="school_year" placeholder="2019" />
+        </div>
+      </div>
+
+      <!-- ── 4. Languages & Proficiency ────────────────────────────────────── -->
+      <div class="section-title">4. Languages & Proficiency Level</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="languages">Languages Spoken</label>
+          <input type="text" id="languages" name="languages" placeholder="English, Hindi, Japanese" />
+        </div>
+        <div class="form-group">
+          <label for="language_level">Language Proficiency Level</label>
+          <input type="text" id="language_level" name="language_level" placeholder="Fluent / Beginner / Native" />
+        </div>
+      </div>
+
+      <!-- ── 5. Online Profiles & Technical Skills ──────────────────────────── -->
+      <div class="section-title">5. Online Profiles & Technical Skills</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="linkedin">LinkedIn Profile URL</label>
+          <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/..." />
+        </div>
+        <div class="form-group">
+          <label for="github">GitHub Profile URL</label>
+          <input type="url" id="github" name="github" placeholder="https://github.com/..." />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="skills">Technical Skills</label>
+        <input type="text" id="skills" name="skills" placeholder="Python, Django, React.js, Next.js, MySQL..." />
+      </div>
+
+      <div class="form-group">
+        <label for="summary">Professional Summary / Bio</label>
+        <textarea id="summary" name="summary" placeholder="Brief summary of experience..."></textarea>
+      </div>
+
+      <div class="actions">
+        <button type="reset" class="btn-secondary">Clear Form</button>
+        <button type="submit" class="btn-primary">Submit Application</button>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>
