@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,232 +10,283 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="popup.css" />
 </head>
+
 <body>
 
-<!-- ── Header ──────────────────────────────────────────────────────────────── -->
-<header class="app-header">
-  <div class="logo">
-    <div class="logo-icon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  <!-- ── Header ──────────────────────────────────────────────────────────────── -->
+  <header class="app-header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+      </div>
+      <span class="logo-text">Auto<span>Form</span>Filler</span>
+    </div>
+    <div class="status-indicator" id="status-indicator">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="status-text">Checking…</span>
+    </div>
+  </header>
+
+  <!-- ── Tab bar ─────────────────────────────────────────────────────────────── -->
+  <nav class="tab-bar" role="tablist">
+    <button class="tab-btn active" id="tab-fill" role="tab" aria-selected="true" aria-controls="panel-fill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 20h9" />
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
       </svg>
-    </div>
-    <span class="logo-text">Auto<span>Form</span>Filler</span>
-  </div>
-  <div class="status-indicator" id="status-indicator">
-    <div class="status-dot" id="status-dot"></div>
-    <span id="status-text">Checking…</span>
-  </div>
-</header>
+      Fill Form
+    </button>
+    <button class="tab-btn" id="tab-profiles" role="tab" aria-selected="false" aria-controls="panel-profiles">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+      Profiles
+    </button>
+    <button class="tab-btn" id="tab-add" role="tab" aria-selected="false" aria-controls="panel-add">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+      Add Profile
+    </button>
+  </nav>
 
-<!-- ── Tab bar ─────────────────────────────────────────────────────────────── -->
-<nav class="tab-bar" role="tablist">
-  <button class="tab-btn active" id="tab-fill" role="tab" aria-selected="true" aria-controls="panel-fill">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    Fill Form
-  </button>
-  <button class="tab-btn" id="tab-profiles" role="tab" aria-selected="false" aria-controls="panel-profiles">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    Profiles
-  </button>
-  <button class="tab-btn" id="tab-add" role="tab" aria-selected="false" aria-controls="panel-add">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    Add Profile
-  </button>
-</nav>
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- Panel: Fill Form                                                          -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="panel active" id="panel-fill" role="tabpanel" aria-labelledby="tab-fill">
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<!-- Panel: Fill Form                                                          -->
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<section class="panel active" id="panel-fill" role="tabpanel" aria-labelledby="tab-fill">
-
-  <!-- Active Site Security Verification Indicator -->
-  <div id="active-site-box" style="margin-bottom:12px; font-size:11px; color:#94A3B8; background:#1e293b; padding:7px 10px; border-radius:6px; border:1px solid #334155; display:flex; align-items:center; gap:6px;">
-    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#0D9488; flex-shrink:0;"></span>
-    <span id="active-site-text" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Detecting active page…</span>
-  </div>
-
-  <!-- Profile selector -->
-  <div class="profile-select-wrap">
-    <p class="profile-select-label">Select profile to use</p>
-    <select class="profile-select" id="fill-profile-select" aria-label="Select profile">
-      <option value="">— choose a profile —</option>
-    </select>
-  </div>
-
-  <!-- Fill button -->
-  <button class="btn-fill" id="btn-autofill" disabled>
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-    <span id="btn-fill-label">Auto Fill This Form</span>
-    <div class="spinner" id="fill-spinner"></div>
-  </button>
-
-  <!-- Status message -->
-  <div class="fill-status" id="fill-status" role="alert"></div>
-
-  <!-- Info box -->
-  <div style="margin-top:14px;">
-    <p class="text-muted text-sm">
-      AutoFormFiller verifies visible inputs and populates fields using your saved profile with anti-honeypot protection.
-    </p>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<!-- Panel: Profiles                                                           -->
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<section class="panel" id="panel-profiles" role="tabpanel" aria-labelledby="tab-profiles">
-  <div class="scroll-area" id="profile-list-wrap">
-    <div class="empty-state" id="profile-empty-state">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <p>No profiles yet. Add one in the <strong>Add Profile</strong> tab.</p>
-    </div>
-    <div class="profile-list" id="profile-list"></div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<!-- Panel: Add Profile                                                        -->
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<section class="panel" id="panel-add" role="tabpanel" aria-labelledby="tab-add">
-  <div class="scroll-area">
-
-    <!-- Profile name -->
-    <div class="form-group">
-      <label for="profile-name">Profile name <span style="color:#EA580C">*</span></label>
-      <input class="form-input" type="text" id="profile-name" placeholder="e.g. Work, Full-Stack, Aditya…" autocomplete="off" maxlength="100" />
+    <!-- Active Site Security Verification Indicator -->
+    <div id="active-site-box"
+      style="margin-bottom:12px; font-size:11px; color:#94A3B8; background:#1e293b; padding:7px 10px; border-radius:6px; border:1px solid #334155; display:flex; align-items:center; gap:6px;">
+      <span
+        style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#0D9488; flex-shrink:0;"></span>
+      <span id="active-site-text" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Detecting active
+        page…</span>
     </div>
 
-    <!-- ── Option A: Upload resume ──────────────────────────────────────────── -->
-    <p class="section-heading">Option A — Upload Resume</p>
-    <div class="upload-zone" id="upload-zone" role="button" tabindex="0" aria-label="Upload resume file">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      <strong id="upload-filename">Click or drag & drop your resume</strong>
-      <p>PDF, DOCX, or TXT supported (Max 10MB)</p>
-    </div>
-    <input type="file" id="resume-file-input" accept=".pdf,.docx,.doc,.txt" style="display:none" aria-hidden="true" />
-
-    <!-- Parsed preview -->
-    <div class="parsed-preview" id="parsed-preview">
-      <p class="parsed-preview-title">Extracted Details (Saved to Profile)</p>
-      <div id="parsed-fields-list"></div>
+    <!-- Profile selector -->
+    <div class="profile-select-wrap">
+      <p class="profile-select-label">Select profile to use</p>
+      <select class="profile-select" id="fill-profile-select" aria-label="Select profile">
+        <option value="">— choose a profile —</option>
+      </select>
     </div>
 
-    <!-- ── OR divider ────────────────────────────────────────────────────────── -->
-    <div class="divider-text">or manual details</div>
-
-    <!-- ── Option B: Manual entry ───────────────────────────────────────────── -->
-    <p class="section-heading">Personal & Contact</p>
-    <div class="form-group">
-      <label for="f-full-name">Full name</label>
-      <input class="form-input" type="text" id="f-full-name" placeholder="Aditya Chauhan" autocomplete="name" maxlength="100" />
-    </div>
-    <div class="row">
-      <div class="form-group" style="flex:1">
-        <label for="f-email">Email</label>
-        <input class="form-input" type="email" id="f-email" placeholder="email@example.com" autocomplete="email" maxlength="100" />
-      </div>
-      <div class="form-group" style="flex:1">
-        <label for="f-phone">Phone</label>
-        <input class="form-input" type="tel" id="f-phone" placeholder="+91 8369899103" autocomplete="tel" maxlength="40" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="f-address">Location / Address</label>
-      <input class="form-input" type="text" id="f-address" placeholder="Mumbai, India" autocomplete="street-address" maxlength="200" />
-    </div>
-
-    <p class="section-heading" style="margin-top:12px;">Experience & Company</p>
-    <div class="row">
-      <div class="form-group" style="flex:1">
-        <label for="f-company">Current Company</label>
-        <input class="form-input" type="text" id="f-company" placeholder="Cinefil India..." autocomplete="organization" maxlength="150" />
-      </div>
-      <div class="form-group" style="flex:1">
-        <label for="f-job-title">Job Title / Role</label>
-        <input class="form-input" type="text" id="f-job-title" placeholder="Software Engineer" autocomplete="organization-title" maxlength="150" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="f-dates">Work Dates / Tenure</label>
-      <input class="form-input" type="text" id="f-dates" placeholder="Jan 2026 – Present" maxlength="100" />
-    </div>
-
-    <p class="section-heading" style="margin-top:12px;">Education & Schooling</p>
-    <div class="form-group">
-      <label for="f-university">University / College</label>
-      <input class="form-input" type="text" id="f-university" placeholder="Yashwantrao Chavan Maharashtra Open University" maxlength="200" />
-    </div>
-    <div class="row">
-      <div class="form-group" style="flex:1">
-        <label for="f-degree">Degree / Course</label>
-        <input class="form-input" type="text" id="f-degree" placeholder="BCA / Bachelor..." maxlength="150" />
-      </div>
-      <div class="form-group" style="flex:1">
-        <label for="f-grad-date">Graduation Date / Year</label>
-        <input class="form-input" type="text" id="f-grad-date" placeholder="2024 / Aug 2021 – Apr 2024" maxlength="100" />
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group" style="flex:1">
-        <label for="f-school">School / Junior College</label>
-        <input class="form-input" type="text" id="f-school" placeholder="TP Bhatia College, Kandivali" maxlength="200" />
-      </div>
-      <div class="form-group" style="flex:1">
-        <label for="f-school-year">School Year</label>
-        <input class="form-input" type="text" id="f-school-year" placeholder="2019" maxlength="30" />
-      </div>
-    </div>
-
-    <p class="section-heading" style="margin-top:12px;">Languages & Proficiency</p>
-    <div class="row">
-      <div class="form-group" style="flex:1">
-        <label for="f-languages">Languages Spoken</label>
-        <input class="form-input" type="text" id="f-languages" placeholder="English, Hindi, Japanese" maxlength="200" />
-      </div>
-      <div class="form-group" style="flex:1">
-        <label for="f-lang-level">Proficiency Level</label>
-        <input class="form-input" type="text" id="f-lang-level" placeholder="Fluent / Native / Beginner" maxlength="100" />
-      </div>
-    </div>
-
-    <p class="section-heading" style="margin-top:12px;">Links & Skills</p>
-    <div class="row">
-      <div class="form-group" style="flex:1">
-        <label for="f-linkedin">LinkedIn URL</label>
-        <input class="form-input" type="url" id="f-linkedin" placeholder="linkedin.com/in/..." maxlength="200" />
-      </div>
-      <div class="form-group" style="flex:1">
-        <label for="f-github">GitHub URL</label>
-        <input class="form-input" type="url" id="f-github" placeholder="github.com/..." maxlength="200" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="f-skills">Technical Skills</label>
-      <input class="form-input" type="text" id="f-skills" placeholder="Python, React.js, Django, SQL..." maxlength="500" />
-    </div>
-
-    <!-- Custom / extra fields -->
-    <p class="section-heading" style="margin-top:8px">Extra custom fields</p>
-    <div class="custom-fields-list" id="custom-fields-list"></div>
-    <button class="btn btn-outline btn-sm" id="btn-add-field" type="button">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Add field
+    <!-- Fill button -->
+    <button class="btn-fill" id="btn-autofill" disabled>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      </svg>
+      <span id="btn-fill-label">Auto Fill This Form</span>
+      <div class="spinner" id="fill-spinner"></div>
     </button>
 
-    <hr class="divider" />
+    <!-- Status message -->
+    <div class="fill-status" id="fill-status" role="alert"></div>
 
-    <!-- Save button -->
-    <div class="row">
-      <button class="btn btn-primary" id="btn-save-profile" style="flex:1;justify-content:center;" type="button">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        Save Profile
-      </button>
+    <!-- Info box -->
+    <div style="margin-top:14px;">
+      <p class="text-muted text-sm">
+        AutoFormFiller verifies visible inputs and populates fields using your saved profile with anti-honeypot
+        protection.
+      </p>
     </div>
-    <div class="fill-status" id="save-status" role="alert" style="margin-top:8px"></div>
-  </div>
-</section>
+  </section>
 
-<script src="popup.js"></script>
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- Panel: Profiles                                                           -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="panel" id="panel-profiles" role="tabpanel" aria-labelledby="tab-profiles">
+    <div class="scroll-area" id="profile-list-wrap">
+      <div class="empty-state" id="profile-empty-state">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        <p>No profiles yet. Add one in the <strong>Add Profile</strong> tab.</p>
+      </div>
+      <div class="profile-list" id="profile-list"></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- Panel: Add Profile                                                        -->
+  <!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <section class="panel" id="panel-add" role="tabpanel" aria-labelledby="tab-add">
+    <div class="scroll-area">
+
+      <!-- Profile name -->
+      <div class="form-group">
+        <label for="profile-name">Profile name <span style="color:#EA580C">*</span></label>
+        <input class="form-input" type="text" id="profile-name" placeholder="e.g. Work, Full-Stack, Aditya…"
+          autocomplete="off" maxlength="100" />
+      </div>
+
+      <!-- ── Option A: Upload resume ──────────────────────────────────────────── -->
+      <p class="section-heading">Option A — Upload Resume</p>
+      <div class="upload-zone" id="upload-zone" role="button" tabindex="0" aria-label="Upload resume file">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 8px;">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="17 8 12 3 7 8" />
+          <line x1="12" y1="3" x2="12" y2="15" />
+        </svg>
+        <strong id="upload-filename">Click or drag & drop your resume</strong>
+        <p>PDF, DOCX, or TXT supported (Max 10MB)</p>
+      </div>
+      <input type="file" id="resume-file-input" accept=".pdf,.docx,.doc,.txt" style="display:none" aria-hidden="true" />
+
+      <!-- Parsed preview -->
+      <div class="parsed-preview" id="parsed-preview">
+        <p class="parsed-preview-title">Extracted Details (Saved to Profile)</p>
+        <div id="parsed-fields-list"></div>
+      </div>
+
+      <!-- ── OR divider ────────────────────────────────────────────────────────── -->
+      <div class="divider-text">or manual details</div>
+
+      <!-- ── Option B: Manual entry ───────────────────────────────────────────── -->
+      <p class="section-heading">Personal & Contact</p>
+      <div class="form-group">
+        <label for="f-full-name">Full name</label>
+        <input class="form-input" type="text" id="f-full-name" placeholder="Aditya Chauhan" autocomplete="name"
+          maxlength="100" />
+      </div>
+      <div class="row">
+        <div class="form-group" style="flex:1">
+          <label for="f-email">Email</label>
+          <input class="form-input" type="email" id="f-email" placeholder="email@example.com" autocomplete="email"
+            maxlength="100" />
+        </div>
+        <div class="form-group" style="flex:1">
+          <label for="f-phone">Phone</label>
+          <input class="form-input" type="tel" id="f-phone" placeholder="+91 13798991067" autocomplete="tel"
+            maxlength="40" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="f-address">Location / Address</label>
+        <input class="form-input" type="text" id="f-address" placeholder="Mumbai, India" autocomplete="street-address"
+          maxlength="200" />
+      </div>
+
+      <p class="section-heading" style="margin-top:12px;">Experience & Company</p>
+      <div class="row">
+        <div class="form-group" style="flex:1">
+          <label for="f-company">Current Company</label>
+          <input class="form-input" type="text" id="f-company" placeholder="Cinefil India..."
+            autocomplete="organization" maxlength="150" />
+        </div>
+        <div class="form-group" style="flex:1">
+          <label for="f-job-title">Job Title / Role</label>
+          <input class="form-input" type="text" id="f-job-title" placeholder="Software Engineer"
+            autocomplete="organization-title" maxlength="150" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="f-dates">Work Dates / Tenure</label>
+        <input class="form-input" type="text" id="f-dates" placeholder="Jan 2026 – Present" maxlength="100" />
+      </div>
+
+      <p class="section-heading" style="margin-top:12px;">Education & Schooling</p>
+      <div class="form-group">
+        <label for="f-university">University / College</label>
+        <input class="form-input" type="text" id="f-university"
+          placeholder="Yashwantrao Chavan Maharashtra Open University" maxlength="200" />
+      </div>
+      <div class="row">
+        <div class="form-group" style="flex:1">
+          <label for="f-degree">Degree / Course</label>
+          <input class="form-input" type="text" id="f-degree" placeholder="BCA / Bachelor..." maxlength="150" />
+        </div>
+        <div class="form-group" style="flex:1">
+          <label for="f-grad-date">Graduation Date / Year</label>
+          <input class="form-input" type="text" id="f-grad-date" placeholder="2024 / Aug 2021 – Apr 2024"
+            maxlength="100" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group" style="flex:1">
+          <label for="f-school">School / Junior College</label>
+          <input class="form-input" type="text" id="f-school" placeholder="TP Bhatia College, Kandivali"
+            maxlength="200" />
+        </div>
+        <div class="form-group" style="flex:1">
+          <label for="f-school-year">School Year</label>
+          <input class="form-input" type="text" id="f-school-year" placeholder="2019" maxlength="30" />
+        </div>
+      </div>
+
+      <p class="section-heading" style="margin-top:12px;">Languages & Proficiency</p>
+      <div class="row">
+        <div class="form-group" style="flex:1">
+          <label for="f-languages">Languages Spoken</label>
+          <input class="form-input" type="text" id="f-languages" placeholder="English, Hindi, Japanese"
+            maxlength="200" />
+        </div>
+        <div class="form-group" style="flex:1">
+          <label for="f-lang-level">Proficiency Level</label>
+          <input class="form-input" type="text" id="f-lang-level" placeholder="Fluent / Native / Beginner"
+            maxlength="100" />
+        </div>
+      </div>
+
+      <p class="section-heading" style="margin-top:12px;">Links & Skills</p>
+      <div class="row">
+        <div class="form-group" style="flex:1">
+          <label for="f-linkedin">LinkedIn URL</label>
+          <input class="form-input" type="url" id="f-linkedin" placeholder="linkedin.com/in/..." maxlength="200" />
+        </div>
+        <div class="form-group" style="flex:1">
+          <label for="f-github">GitHub URL</label>
+          <input class="form-input" type="url" id="f-github" placeholder="github.com/..." maxlength="200" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="f-skills">Technical Skills</label>
+        <input class="form-input" type="text" id="f-skills" placeholder="Python, React.js, Django, SQL..."
+          maxlength="500" />
+      </div>
+
+      <!-- Custom / extra fields -->
+      <p class="section-heading" style="margin-top:8px">Extra custom fields</p>
+      <div class="custom-fields-list" id="custom-fields-list"></div>
+      <button class="btn btn-outline btn-sm" id="btn-add-field" type="button">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        Add field
+      </button>
+
+      <hr class="divider" />
+
+      <!-- Save button -->
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-profile" style="flex:1;justify-content:center;" type="button">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+            <polyline points="17 21 17 13 7 13 7 21" />
+            <polyline points="7 3 7 8 15 8" />
+          </svg>
+          Save Profile
+        </button>
+      </div>
+      <div class="fill-status" id="save-status" role="alert" style="margin-top:8px"></div>
+    </div>
+  </section>
+
+  <script src="popup.js"></script>
 </body>
+
 </html>
